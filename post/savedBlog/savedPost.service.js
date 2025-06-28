@@ -1,9 +1,10 @@
+import { checkMongooseIdValidity } from "../../utils/utils.js";
 import SavedPost from "./savedPost.model.js";
 
 export const getSavedPost = async (req, res) => {
-  const userId = req.userInfo._id;
-
   try {
+    const userId = req.userInfo._id;
+
     const savedPost = await SavedPost.aggregate([
       {
         $match: {
@@ -21,6 +22,9 @@ export const getSavedPost = async (req, res) => {
       {
         $unwind: "$postDetails",
       },
+      {
+        $replaceRoot: { newRoot: "$postDetails" },
+      },
     ]);
     return res.status(200).send(savedPost);
   } catch (e) {
@@ -29,10 +33,12 @@ export const getSavedPost = async (req, res) => {
 };
 
 export const savePost = async (req, res) => {
-  const { postId } = req.body;
+  const postId = req.params.id;
   const userId = req.userInfo._id;
 
   try {
+    checkMongooseIdValidity(postId);
+
     const savedPost = await SavedPost.create({
       Userid: userId,
       postId: postId,

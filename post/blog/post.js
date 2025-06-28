@@ -21,7 +21,7 @@ routes.post("/addPost", isUser, createPost);
 routes.get("/getPosts", isUser, getAllPost);
 
 //? ==============get post by ID==============
-routes.get("/getPost/:id", isUser, getPostId);
+routes.get("/:id/getPost", isUser, getPostId);
 
 //?================Get post of User=============
 routes.get("/getPostOfUser", isUser, async (req, res) => {

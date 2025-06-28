@@ -5,7 +5,7 @@ import { isUser } from "../../Authication/authication.js";
 
 const routes = express.Router();
 
-routes.post("/addSavedPost", isUser, savePost);
+routes.post("/:id/addSavedPost", isUser, savePost);
 
 routes.get("/getSavedPost", isUser, getSavedPost);
 
