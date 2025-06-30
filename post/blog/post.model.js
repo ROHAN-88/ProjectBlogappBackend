@@ -57,7 +57,21 @@ const PostSchema = new mongoose.Schema(
     },
     pictureUrl: {
       type: String,
+      required: false,
+    },
+    category: {
       type: String,
+      enum: [
+        "sports",
+        "entertainment",
+        "travel",
+        "food",
+        "fashion",
+        "fitness",
+        "health",
+        "business",
+        "other",
+      ],
       required: false,
     },
     comment: {
