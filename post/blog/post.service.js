@@ -57,6 +57,21 @@ export const getPostId = async (req, res) => {
   }
 };
 
+export const getPostByUId = async (req, res) => {
+  const userID = req.params.id;
+  try {
+    //? -=-=====checking the validation of postId
+    checkMongooseIdValidity(userID);
+
+    //?=====find the post
+    const postDetail = await Post.find({ userId: userID });
+
+    return res.status(200).send(postDetail);
+  } catch (error) {
+    console.log("Error");
+    return res.status(400).send({ message: error.message });
+  }
+};
 //!=================Edit Post=================
 export const editPost = async (req, res) => {
   const editPostBody = req.body;
@@ -104,7 +119,7 @@ export const deletePost = async (req, res) => {
   try {
     //!valid mongo id
 
-    await checkMongooseIdValidity(deletePostId);
+    checkMongooseIdValidity(deletePostId);
 
     //!finding post
     const post = await Post.findOne({ _id: deletePostId });
@@ -145,5 +160,83 @@ export const postComments = async (req, res) => {
     return res.status(200).send(post);
   } catch (error) {
     return res.status(400).send({ message: error.message });
+  }
+};
+
+//like api
+// export const PostLikes = async (req, res) => {
+//   const postId = req.params.id;
+//   const userId = req.userInfo._id;
+
+//   try {
+//     checkMongooseIdValidity(postId);
+
+//     const post = await Post.findById(postId);
+//     if (!post) return res.status(404).send({ message: "Post not found" });
+
+//     // Ensure post.likes is always an array
+//     if (!Array.isArray(post.likes)) post.likes = [];
+
+//     // Fix the includes check
+//     const hasLiked = post.likes
+//       .map((id) => id.toString())
+//       .includes(userId.toString());
+
+//     if (hasLiked) {
+//       // Unlike
+//       post.likes = post.likes.filter(
+//         (id) => id.toString() !== userId.toString()
+//       );
+//     } else {
+//       // Like
+//       post.likes.push(userId);
+//     }
+
+//     await post.save();
+
+//     res.status(200).send({
+//       message: hasLiked ? "Post unliked" : "Post liked",
+
+//       likesCount: post.likes.length,
+//     });
+//   } catch (e) {
+//     return res.status(400).send({ message: e.message });
+//   }
+// };
+
+export const PostLikes = async (req, res) => {
+  const postId = req.params.id;
+  const userId = req.userInfo._id;
+
+  try {
+    checkMongooseIdValidity(postId);
+
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).send({ message: "Post not found" });
+
+    // Ensure post.likes is always an array
+    if (!Array.isArray(post.likes)) post.likes = [];
+
+    const hasLiked = post.likes
+      .map((id) => id.toString())
+      .includes(userId.toString());
+
+    if (hasLiked) {
+      post.likes = post.likes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+    } else {
+      post.likes.push(userId);
+    }
+
+    await post.save();
+
+    res.status(200).send({
+      message: hasLiked ? "Post unliked" : "Post liked",
+      likesCount: post.likes.length,
+      likedUsers: post.likes.map((id) => id.toString()), // Send array of liked user IDs
+    });
+  } catch (e) {
+    return res.status(400).send({ message: e.message });
   }
 };

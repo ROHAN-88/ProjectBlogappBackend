@@ -7,8 +7,10 @@ import {
   deletePost,
   editPost,
   getAllPost,
+  getPostByUId,
   getPostId,
   postComments,
+  PostLikes,
 } from "./post.service.js";
 
 const routes = express.Router();
@@ -23,6 +25,7 @@ routes.get("/getPosts", isUser, getAllPost);
 //? ==============get post by ID==============
 routes.get("/:id/getPost", isUser, getPostId);
 
+routes.get("/:id/getPostofUserById", isUser, getPostByUId);
 //?================Get post of User=============
 routes.get("/getPostOfUser", isUser, async (req, res) => {
   const userId = req.userInfo._id;
@@ -49,9 +52,12 @@ routes.get("/getPostOfUser", isUser, async (req, res) => {
 routes.put("/editPost/:id", isUser, editPost);
 
 //?=================delete========================
-routes.delete("/deletePost/:id", isUser, deletePost);
+routes.delete("/:id/deletePost", isUser, deletePost);
 //!~===================post=================
 
 routes.post("/:id/comments", isUser, postComments);
+
+//!==========likes=========
+routes.post("/:id/like", isUser, PostLikes);
 
 export default routes;

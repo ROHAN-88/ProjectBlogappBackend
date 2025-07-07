@@ -1,12 +1,16 @@
 import express from "express";
-import SavedPost from "./savedPost.model.js";
-import { getSavedPost, savePost } from "./savedPost.service.js";
 import { isUser } from "../../Authication/authication.js";
+import {
+  getAllSavedPost,
+  getSavedPost,
+  toggleSavedPost,
+} from "./savedPost.service.js";
 
 const routes = express.Router();
 
-routes.post("/:id/addSavedPost", isUser, savePost);
+routes.post("/:id/SavePost", isUser, toggleSavedPost);
 
-routes.get("/getSavedPost", isUser, getSavedPost);
+routes.get("/:id/getSavedPost", isUser, getSavedPost);
 
+routes.get("/getAllSavedPost", isUser, getAllSavedPost);
 export default routes;

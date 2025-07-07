@@ -142,15 +142,22 @@ export const userDetail = async (req, res) => {
 
     checkMongooseIdValidity(userId);
 
-    const userDetail = await User.findOne(
-      { _id: userId },
-      { firstName: 1, lastName: 1, email: 1 }
-    );
+    const userData = await User.findOne({ _id: userId });
 
+    const fullName = userData.firstName + " " + userData.lastName;
+    const userDetail = {
+      id: userData._id,
+      fullName: fullName,
+      email: userData.email,
+      pictureUrl: userData.pictureUrl,
+      bio: userData.bio,
+      instaLinks: userData.instaLinks,
+      location: userData.location,
+      occupation: userData.occupation,
+    };
     return res.status(200).send(userDetail);
   } catch (error) {
     console.log(error);
+    return res.status(400).send("Error", error);
   }
-
-  return res.status(200).send("user is by id ");
 };
