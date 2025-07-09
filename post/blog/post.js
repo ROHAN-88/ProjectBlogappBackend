@@ -20,7 +20,7 @@ const routes = express.Router();
 routes.post("/addPost", isUser, createPost);
 
 //? ==============get post==============
-routes.get("/getPosts", isUser, getAllPost);
+routes.get("/getPosts", getAllPost);
 
 //? ==============get post by ID==============
 routes.get("/:id/getPost", isUser, getPostId);
@@ -49,7 +49,7 @@ routes.get("/getPostOfUser", isUser, async (req, res) => {
 });
 
 //?==============edit================
-routes.put("/editPost/:id", isUser, editPost);
+routes.put("/:id/editPost", isUser, editPost);
 
 //?=================delete========================
 routes.delete("/:id/deletePost", isUser, deletePost);

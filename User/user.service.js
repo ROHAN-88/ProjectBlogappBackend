@@ -119,18 +119,12 @@ export const EditUser = async (req, res) => {
           email: toBeEdited?.email,
           pictureUrl: toBeEdited?.pictureUrl,
           bio: toBeEdited?.bio,
-          fbLinks: toBeEdited?.fbLinks,
-          instaLinks: toBeEdited?.instaLinks,
-          linkedLinks: toBeEdited?.linkedLinks,
-          youtubeLinks: toBeEdited?.youtubeLinks,
-          githubLinks: toBeEdited?.githubLinks,
-          location: toBeEdited?.location,
-          occupation: toBeEdited?.occupation,
         },
       }
     );
-
-    return res.status(200).send("Edited");
+    if (editedData.acknowledged) {
+      return res.status(200).send("Edited");
+    }
   } catch (e) {
     return res.status(400).send({ message: e.message });
   }

@@ -100,13 +100,16 @@ export const editPost = async (req, res) => {
       { _id: postId },
       {
         $set: {
+          title: editPostBody.title,
           text: editPostBody.text,
+          category: editPostBody.category,
           imageUrl: editPostBody.imageUrl,
         },
       }
     );
-
-    return res.status(200).send("edited");
+    if (eiditedPost.acknowledged) {
+      return res.status(200).send("Edited");
+    }
   } catch (e) {
     return res.status(400).send({ message: e.message });
   }

@@ -21,7 +21,7 @@ routes.post("/login", login);
 routes.get("/getuserdetail", isUser, userData);
 
 //!=============Edit User Data ===================
-routes.put("/EditProfile/:id", isUser, EditUser);
+routes.put("/:id/EditProfile", isUser, EditUser);
 
 //! ===================GetUserById=================
 
