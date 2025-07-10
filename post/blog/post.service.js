@@ -166,6 +166,45 @@ export const postComments = async (req, res) => {
   }
 };
 
+export const removeComment = async (req, res) => {
+  const postId = req.params.postId;
+  const commentId = req.params.commentId;
+  const userID = req.userInfo._id;
+
+  try {
+    checkMongooseIdValidity(postId);
+    checkMongooseIdValidity(commentId);
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const comment = post.comment.find(
+      (c) => String(c._id) === String(commentId)
+    );
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    if (String(comment.userID) !== String(userID)) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to delete this comment" });
+    }
+
+    // Remove the comment by filtering it out
+    post.comment = post.comment.filter(
+      (c) => String(c._id) !== String(commentId)
+    );
+    await post.save();
+
+    return res.status(200).json({ message: "Comment removed", post });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
+
 //like api
 // export const PostLikes = async (req, res) => {
 //   const postId = req.params.id;

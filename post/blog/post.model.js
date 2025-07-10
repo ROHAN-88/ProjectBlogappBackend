@@ -64,6 +64,7 @@ const PostSchema = new mongoose.Schema(
       type: String,
       enum: [
         "sports",
+        "animal",
         "entertainment",
         "travel",
         "food",

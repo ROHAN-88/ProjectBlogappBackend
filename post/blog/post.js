@@ -11,6 +11,7 @@ import {
   getPostId,
   postComments,
   PostLikes,
+  removeComment,
 } from "./post.service.js";
 
 const routes = express.Router();
@@ -56,6 +57,8 @@ routes.delete("/:id/deletePost", isUser, deletePost);
 //!~===================post=================
 
 routes.post("/:id/comments", isUser, postComments);
+
+routes.delete("/posts/:postId/comments/:commentId", isUser, removeComment);
 
 //!==========likes=========
 routes.post("/:id/like", isUser, PostLikes);
